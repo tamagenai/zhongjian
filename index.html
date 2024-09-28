@@ -84,7 +84,7 @@
       margin-top: 0;
       margin-bottom: 0;
       cursor: pointer;
-
+      user-select: none;
     }
 
     .hanyuDisplay {
@@ -374,7 +374,7 @@
 
 <body>
   <div class="header">
-    <p>中国語検定　　　　<button id="timer">時間計測</button></p>
+    <p>中国語検定　<button id="timer">時間計測</button></p>
 
     <div class="divFlex">
       <div class="sheetSelect">
@@ -581,7 +581,7 @@
       let questionSpans = questionGroup[cssIndex];
       // let sheetDatas;
       if (quizPattern !== 'E') {
-        var uttr = new SpeechSynthesisUtterance(td.textContent);
+        var uttr = new SpeechSynthesisUtterance(setHanyuBunkai(td.textContent));
         uttr.lang = "zh-CN"
         uttr.rate = speakSpeedRate();
         speechSynthesis.cancel();
@@ -1319,7 +1319,7 @@
           let answerString = '';
           let i;
           for (i = 1; i < span.length; i++) {
-            answerString = answerString + span[i].textContent;
+            answerString = answerString +  setHanyuBunkai(span[i].textContent);
 
           }
           console.log(answerString);
