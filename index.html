@@ -1400,7 +1400,7 @@
             console.log(`correctAnswer=${correctAnswer}`);
             console.log(`answerString=${answerString}`);
             // if (answerString === correctAnswer) {
-            if (correctAnswer.includes(answerString)) {
+              if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
 
               comment.textContent = '好！赞👍';
               seikaiSu++;
