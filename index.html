@@ -374,7 +374,7 @@
 
 <body>
   <div class="header">
-    <p>ai中国語クイズ　　　　<button id="timer">時間計測</button></p>
+    <p>中国語検定　　　　<button id="timer">時間計測</button></p>
 
     <div class="divFlex">
       <div class="sheetSelect">
@@ -1373,19 +1373,10 @@
 
           }
           console.log(answerString);
-          if (questions[cssIndex][idxPattern] === 'N') {
-            if (patternNCheck(answerString, hanyu)) {
-              seikaiSu++;
-              comment.textContent = '好！赞👍';
-            } else {
-              comment.textContent = '错×　再加油！！';
-
-            }
-            
-            speakData(comment);
-          } else {
+         
+          
             let correctAnswer;
-            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T') {
+            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T'  || questions[cssIndex][idxPattern] === 'N') {
               
               saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
               correctAnswer = saveQuestions[cssIndex][5];
@@ -1400,8 +1391,7 @@
             console.log(`correctAnswer=${correctAnswer}`);
             console.log(`answerString=${answerString}`);
             // if (answerString === correctAnswer) {
-              if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
-
+            if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
               comment.textContent = '好！赞👍';
               seikaiSu++;
               console.log('OK');
@@ -1425,7 +1415,8 @@
         
         // Replace '()' with answerString in hanyuParts1
         let hanyuParts3 = hanyuParts1.replace('()', answerString);
-        
+        console.log(`hanyuParts2=${hanyuParts2}`);
+        console.log(`hanyuParts3=${hanyuParts3}`);
         
           if (hanyuParts2 === hanyuParts3) {
             return true;
@@ -1435,7 +1426,7 @@
           }
         }
        
-      }
+      
       // Lパターン　判定
       function lPaternJudge(hAnswer, cssIndex) {
         recognition.stop();
