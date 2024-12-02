@@ -355,6 +355,33 @@
     .statusNodisplay {
       display: none;
     }
+    .loading {
+      position: fixed;
+      top: 100px;
+      left: 100px;
+      z-index: 99;
+      content: '';
+      display: block;
+      margin: auto;
+      width: 300px;
+      border: 4px solid #ccc;
+      border-right-color: #0AC;
+      border-radius: 100px;
+      width: 30px;
+      height: 30px;
+      background-color: white;
+      animation: rotation 0.6s linear infinite;
+    }
+
+    @keyframes rotation {
+      from {
+        transform: rotate(0);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     @keyframes fadeIn {
       0% {
@@ -373,6 +400,7 @@
 </head>
 
 <body>
+  <div id="kurukuru" class="loading"></div>
   <div class="header">
     <p>中国語検定　　　　<button id="timer">時間計測</button></p>
 
@@ -461,6 +489,11 @@
     let kNihongo2;
     let hanyuTab; // C,Gパターンの中国語の配列
     let saveQuestions;  // questionsの保存 for Oパターン
+    let voices = [];
+    // 初期音声リストの取得
+    voices = speechSynthesis.getVoices();
+    // 音声リストが取得できない場合は、音声リストが取得できるようになるまで待機
+    // 
 
     //
     // Declare webkitSpeechRecognition
@@ -565,6 +598,15 @@
       var uttr = new SpeechSynthesisUtterance(td.textContent);
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
+      // 利用可能な音声を確認
+      const voices = speechSynthesis.getVoices();
+      const chineseVoice = getChineseVoice();
+
+      if (chineseVoice) {
+        uttr.voice = chineseVoice;
+      } else {
+        console.warn('Chinese voice not found, using default voice.');
+      }
       speechSynthesis.cancel();
       speechSynthesis.speak(uttr);
 
@@ -578,6 +620,15 @@
       var uttr = new SpeechSynthesisUtterance(hanyuString);
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
+      // 利用可能な音声を確認
+      const voices = speechSynthesis.getVoices();
+      const chineseVoice = getChineseVoice();
+
+      if (chineseVoice) {
+        uttr.voice = chineseVoice;
+      } else {
+        console.warn('Chinese voice not found, using default voice.');
+      }
       speechSynthesis.cancel();
       speechSynthesis.speak(uttr);
 
@@ -597,6 +648,15 @@
         var uttr = new SpeechSynthesisUtterance(setHanyuBunkai(td.textContent));
         uttr.lang = "zh-CN"
         uttr.rate = speakSpeedRate();
+        // 利用可能な音声を確認
+      const voices = speechSynthesis.getVoices();
+      const chineseVoice = getChineseVoice();
+
+      if (chineseVoice) {
+        uttr.voice = chineseVoice;
+      } else {
+        console.warn('Chinese voice not found, using default voice.');
+      }
         speechSynthesis.cancel();
         speechSynthesis.speak(uttr);
 
@@ -636,12 +696,33 @@
       var uttr = new SpeechSynthesisUtterance(hanyuWords);
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
+      // 利用可能な音声を確認
+      const voices = speechSynthesis.getVoices();
+      const chineseVoice = getChineseVoice();
+
+      if (chineseVoice) {
+        uttr.voice = chineseVoice;
+      } else {
+        console.warn('Chinese voice not found, using default voice.');
+      }
       speechSynthesis.cancel();
       speechSynthesis.speak(uttr);
 
       // }
 
     }
+    function getChineseVoice() {
+      if (voices.length === 0) {
+        voices = speechSynthesis.getVoices();
+      }
+      return voices.find(voice => voice.lang === 'zh-CN');
+    }
+
+    // 音声リストが更新されたときに再取得
+    speechSynthesis.onvoiceschanged = function () {
+      voices = speechSynthesis.getVoices();
+    };
+
 
     // speak speed 調整 2023-06-22
     function speakSpeedRate() {
@@ -713,7 +794,7 @@
         sheetIndex2 = 0; // 第1番目のシート
         questions = structuredClone(sheetDatas[1]);
         renderQuestions(questions);
-
+        kurukuru.remove();
         iniCSSSet();
       }).fail((error) => {  // 失敗した時の処理
         alert('Error:' + JSON.stringify(error));
